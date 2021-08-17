@@ -652,7 +652,7 @@ p1 <- graph_perpendicular_from_C_L(color_points_sphere)
 p2 <- graph_perpendicular_from_C_L(color_points_ellipse)
 p3 <- graph_perpendicular_from_C_L(color_points_tilted_ellipse)
 p1 + p2 + p3
-ggsave(here::here("output", "color_investigation", "compare_c_l.png"), 
+ggsave(here::here("output", "color_investigation", "compare_p_c_l.png"), 
        width = 5, height = 3)
 
 p1 <- graph_x_y(color_points_sphere, H_point)

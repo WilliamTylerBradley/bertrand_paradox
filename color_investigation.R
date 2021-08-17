@@ -251,8 +251,10 @@ color_points <- data.frame(x = rnorm(n = n_points),
          C = sqrt(x^2 + y^2),
          L = z) %>%
   mutate(color_value = hcl(H, C, L, fixup = FALSE)) %>%
-  mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + y * cos(-H_point * pi/180),
-         parallel_along_C_L = x * cos(-H_point * pi/180) - y * sin(-H_point * pi/180)) %>%
+  mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + 
+           y * cos(-H_point * pi/180),
+         parallel_along_C_L = x * cos(-H_point * pi/180) - 
+           y * sin(-H_point * pi/180)) %>%
   mutate(row_value = sample(row_number(), n()),
          col_value = ceiling(row_value / sqrt(n_points))) %>%
   mutate(row_value = (row_value %% sqrt(n_points)) + 1)
@@ -296,7 +298,8 @@ ggsave(here::here("output", "color_investigation", "sphere_info.png"),
 
 
 graph_C_L <- function(color_points) {
-  ggplot(data = color_points, aes(C, L, col = color_value, fill = color_value)) +
+  ggplot(data = color_points, aes(C, L, 
+                                  col = color_value, fill = color_value)) +
     geom_point() +
     scale_color_identity() +
     scale_fill_identity() +
@@ -310,10 +313,11 @@ p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "sphere_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2.5)
 
 graph_H_L <- function(color_points, H_point) {
-  ggplot(data = color_points, aes((H + (180 - H_point)) %% 360, L, col = color_value, fill = color_value)) +
+  ggplot(data = color_points, aes((H + (180 - H_point)) %% 360, L, 
+                                  col = color_value, fill = color_value)) +
     geom_point() +
     scale_color_identity() +
     scale_fill_identity() +
@@ -328,10 +332,11 @@ p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "sphere_h_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 graph_perpendicular_from_C_L <- function(color_points) {
-  ggplot(data = color_points, aes(perpendicular_from_C_L, L, color = color_value, fill = color_value)) +
+  ggplot(data = color_points, aes(perpendicular_from_C_L, L, 
+                                  color = color_value, fill = color_value)) +
     geom_point() +
     scale_color_identity() +
     scale_fill_identity()  +
@@ -346,13 +351,19 @@ p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "sphere_p_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2)
 
 graph_x_y <- function(color_points, H_point) {
-  ggplot(data = color_points, aes(x, y, col = color_value, fill = color_value)) +
-    geom_abline(slope = c(tan(-67.5 * pi/180), tan(-45 * pi/180), tan(-22.5 * pi/180),
-                          0, 100000,
-                          tan(22.5 * pi/180), tan(45 * pi/180), tan(67.5 * pi/180)), 
+  ggplot(data = color_points, aes(x, y, 
+                                  col = color_value, fill = color_value)) +
+    geom_abline(slope = c(tan(-67.5 * pi/180), 
+                          tan(-45 * pi/180), 
+                          tan(-22.5 * pi/180),
+                          0, 
+                          100000,
+                          tan(22.5 * pi/180), 
+                          tan(45 * pi/180), 
+                          tan(67.5 * pi/180)), 
                 intercept = 0,
                 color = "white") +
     geom_abline(slope = tan(H_point * pi/180), 
@@ -372,7 +383,7 @@ p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "sphere_h_c.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2.5)
 
 ##-------
 # Ellipse
@@ -393,8 +404,10 @@ color_points <- data.frame(x = rnorm(n = n_points),
   mutate(x = x * C_radius, # stretch
          y = y * H_radius,
          z = z * L_radius) %>%
-  mutate(x_turn = x * cos(H_point * pi/180) - y * sin(H_point * pi/180), # rotate
-         y_turn = x * sin(H_point * pi/180) + y * cos(H_point * pi/180)) %>%
+  mutate(x_turn = x * cos(H_point * pi/180) - 
+           y * sin(H_point * pi/180), # rotate
+         y_turn = x * sin(H_point * pi/180) + 
+           y * cos(H_point * pi/180)) %>%
   mutate(x = x_turn,
          y = y_turn) %>%
   select(-x_turn, -y_turn) %>%
@@ -406,8 +419,10 @@ color_points <- data.frame(x = rnorm(n = n_points),
          L = z) %>%
   filter(L >= 0 & L <= 100 & C >= 0) %>%
   mutate(color_value = hcl(H, C, L, fixup = FALSE)) %>%
-  mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + y * cos(-H_point * pi/180),
-         parallel_along_C_L = x * cos(-H_point * pi/180) - y * sin(-H_point * pi/180)) %>%
+  mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + 
+           y * cos(-H_point * pi/180),
+         parallel_along_C_L = x * cos(-H_point * pi/180) - 
+           y * sin(-H_point * pi/180)) %>%
   mutate(row_value = sample(row_number(), n()),
          col_value = ceiling(row_value / sqrt(n_points))) %>%
   mutate(row_value = (row_value %% sqrt(n_points)) + 1)
@@ -428,13 +443,13 @@ p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "ellipse_h_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "ellipse_p_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
@@ -471,8 +486,10 @@ color_points <- data.frame(x = rnorm(n = n_points),
   mutate(x = x_tilt,
          z = z_tilt) %>%
   select(-x_tilt, -z_tilt) %>%
-  mutate(x_turn = x * cos(H_point * pi/180) - y * sin(H_point * pi/180), # rotate
-         y_turn = x * sin(H_point * pi/180) + y * cos(H_point * pi/180)) %>%
+  mutate(x_turn = x * cos(H_point * pi/180) - 
+           y * sin(H_point * pi/180), # rotate
+         y_turn = x * sin(H_point * pi/180) + 
+           y * cos(H_point * pi/180)) %>%
   mutate(x = x_turn,
          y = y_turn) %>%
   select(-x_turn, -y_turn) %>%
@@ -484,8 +501,10 @@ color_points <- data.frame(x = rnorm(n = n_points),
          L = z) %>%
   filter(L >= 0 & L <= 100 & C >= 0) %>%
   mutate(color_value = hcl(H, C, L, fixup = FALSE)) %>%
-  mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + y * cos(-H_point * pi/180),
-         parallel_along_C_L = x * cos(-H_point * pi/180) - y * sin(-H_point * pi/180)) %>%
+  mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + 
+           y * cos(-H_point * pi/180),
+         parallel_along_C_L = x * cos(-H_point * pi/180) - 
+           y * sin(-H_point * pi/180)) %>%
   mutate(row_value = sample(row_number(), n()),
          col_value = ceiling(row_value / sqrt(n_points))) %>%
   mutate(row_value = (row_value %% sqrt(n_points)) + 1)
@@ -500,19 +519,19 @@ p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "tilted_ellipse_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2)
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
 p1 + p2 # Not quite an ellipse
 ggsave(here::here("output", "color_investigation", "tilted_ellipse_h_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "tilted_ellipse_p_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
@@ -530,7 +549,8 @@ ggsave(here::here("output", "color_investigation", "tilted_ellipse_h_c.png"),
 H_bound <- 3 # up to 90
 get_color_points <- function(n_points, oversample,
                              H_point, C_point, L_point,
-                             theta_radius, other_C_L_radius, perpendicular_C_L_radius,
+                             theta_radius, other_C_L_radius, 
+                             perpendicular_C_L_radius,
                              tilt_theta, H_bound) {
   data.frame(x = rnorm(n = n_points * oversample), # over sample in case some points fail
              y = rnorm(n = n_points * oversample),
@@ -563,13 +583,16 @@ get_color_points <- function(n_points, oversample,
     filter(L >= 0 & L <= 100 & C >= 0) %>%
     mutate(color_value = hcl(H, C, L, fixup = FALSE)) %>%
     filter(!is.na(color_value)) %>% # check if exists
-    mutate(H_diff = (180 - abs(abs(H - H_point) - 180)) * sign(180 - abs(H - H_point)) * sign(H - H_point)) %>% # H diff, check if crosses 360
+    mutate(H_diff = (180 - abs(abs(H - H_point) - 180)) * 
+             sign(180 - abs(H - H_point)) * sign(H - H_point)) %>% # H diff, check if crosses 360
     filter(abs(H_diff) <= H_bound) %>% # check in H bound
     filter(!is.na(hcl(H_point - H_diff, C, L, fixup = FALSE))) %>% # symmetric
     select(!H_diff) %>%
     sample_n(n_points) %>% # sample down to desired amount
-    mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + y * cos(-H_point * pi/180),
-           parallel_along_C_L = x * cos(-H_point * pi/180) - y * sin(-H_point * pi/180)) %>%
+    mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + 
+             y * cos(-H_point * pi/180),
+           parallel_along_C_L = x * cos(-H_point * pi/180) - 
+             y * sin(-H_point * pi/180)) %>%
     mutate(row_value = sample(row_number(), n()),
            col_value = ceiling(row_value / sqrt(n_points))) %>%
     mutate(row_value = (row_value %% sqrt(n_points)) + 1)
@@ -577,7 +600,8 @@ get_color_points <- function(n_points, oversample,
 
 color_points <- get_color_points(250^2, 10,
                                  H_point, C_point, L_point,
-                                 theta_radius, other_C_L_radius, perpendicular_C_L_radius,
+                                 theta_radius, other_C_L_radius, 
+                                 perpendicular_C_L_radius,
                                  tilt_theta, H_bound)
 
 ##-------
@@ -586,15 +610,21 @@ color_points <- get_color_points(250^2, 10,
 H_bound <- 90
 color_points_sphere <- get_color_points(250^2, 10,
                                         H_point, C_point, L_point,
-                                        theta_radius = radius, other_C_L_radius = radius, perpendicular_C_L_radius = radius,
+                                        theta_radius = radius, 
+                                        other_C_L_radius = radius, 
+                                        perpendicular_C_L_radius = radius,
                                         tilt_theta = 0, H_bound)
 color_points_ellipse <- get_color_points(250^2, 10,
                                          H_point, C_point, L_point,
-                                         theta_radius = C_radius, other_C_L_radius = H_radius, perpendicular_C_L_radius = L_radius,
+                                         theta_radius = C_radius, 
+                                         other_C_L_radius = H_radius, 
+                                         perpendicular_C_L_radius = L_radius,
                                          tilt_theta = 0, H_bound)
 color_points_tilted_ellipse <- get_color_points(250^2, 10,
                                                 H_point, C_point, L_point,
-                                                theta_radius, other_C_L_radius, perpendicular_C_L_radius,
+                                                theta_radius, 
+                                                other_C_L_radius, 
+                                                perpendicular_C_L_radius,
                                                 tilt_theta, H_bound)
 
 p1 <- graph_sample(color_points_sphere)
@@ -602,14 +632,14 @@ p2 <- graph_sample(color_points_ellipse)
 p3 <- graph_sample(color_points_tilted_ellipse)
 p1 + p2 + p3
 ggsave(here::here("output", "color_investigation", "compare_info.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_C_L(color_points_sphere)
 p2 <- graph_C_L(color_points_ellipse)
 p3 <- graph_C_L(color_points_tilted_ellipse)
 p1 + p2 + p3
 ggsave(here::here("output", "color_investigation", "compare_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_H_L(color_points_sphere, H_point)
 p2 <- graph_H_L(color_points_ellipse, H_point)
@@ -630,7 +660,7 @@ p2 <- graph_x_y(color_points_ellipse, H_point)
 p3 <- graph_x_y(color_points_tilted_ellipse, H_point)
 p1 + p2 + p3
 ggsave(here::here("output", "color_investigation", "compare_h_c.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2)
 
 #--------------------
 # Try some other ones
@@ -660,7 +690,8 @@ H_bound <- 90
 
 color_points <- get_color_points(250^2, 10,
                                  H_point, C_point, L_point,
-                                 theta_radius, other_C_L_radius, perpendicular_C_L_radius,
+                                 theta_radius, other_C_L_radius, 
+                                 perpendicular_C_L_radius,
                                  tilt_theta, H_bound)
 
 p1 <- graph_info(H_point, C_point, L_point)
@@ -673,19 +704,19 @@ p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "outside_edge_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "outside_edge_h_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "outside_edge_p_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
@@ -717,7 +748,8 @@ H_bound <- 45
 
 color_points <- get_color_points(250^2, 10,
                                  H_point, C_point, L_point,
-                                 theta_radius, other_C_L_radius, perpendicular_C_L_radius,
+                                 theta_radius, other_C_L_radius, 
+                                 perpendicular_C_L_radius,
                                  tilt_theta, H_bound)
 
 p1 <- graph_info(H_point, C_point, L_point)
@@ -736,16 +768,16 @@ p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "inside_edge_h_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 1.5)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "inside_edge_p_c_l.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2.5)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
 p1 + p2
 ggsave(here::here("output", "color_investigation", "inside_edge_h_c.png"), 
-       width = 5, height = 3)
+       width = 5, height = 2.5)

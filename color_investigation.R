@@ -211,7 +211,7 @@ graph_C_tangent_plane <- function(C_tangent_plane, color_points, color_hex) {
                    color = "white", fill = "white")) +
     scale_color_identity() +
     scale_fill_identity() +
-    scale_x_reverse("Distance perpendicular to C-L plane",
+    scale_x_reverse("Distance Perpendicular to C-L Plane",
                     labels = abs) +
     geom_point(aes(x = 0,
                    y = L_point),
@@ -388,9 +388,9 @@ ggsave(here::here("output", "color_investigation", "sphere_h_c.png"),
 ##-------
 # Ellipse
 ##-------
-H_radius <- 2.5 # Actually C plane
-C_radius <- 5 #
-L_radius <- 10 #
+H_radius <- 2.5
+C_radius <- 5
+L_radius <- 10
 
 color_points <- data.frame(x = rnorm(n = n_points),
                            y = rnorm(n = n_points),

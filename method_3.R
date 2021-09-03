@@ -412,4 +412,65 @@ grid.points(x = mean(c(opts$point_1_x, opts$point_2_x)),
             gp = gpar(col = hex(point_color)),
             default.units = "in")
 
+##------
+# Border
+##------
+grid.rect(x = x_limits[1],
+          y = y_limits[1],
+          width = .25 / 2,
+          height = y_limits[2],
+          gp = gpar(col = hex(line_color),
+                    fill = hex(line_color)),
+          just = c("left", "bottom"),
+          default.units = "in")
+grid.rect(x = x_limits[1],
+          y = y_limits[2],
+          width = x_limits[2],
+          height = -.25 / 2,
+          gp = gpar(col = hex(line_color),
+                    fill = hex(line_color)),
+          just = c("left", "bottom"),
+          default.units = "in")
+grid.rect(x = x_limits[2],
+          y = y_limits[2],
+          width = -.25 / 2,
+          height = -y_limits[2],
+          gp = gpar(col = hex(line_color),
+                    fill = hex(line_color)),
+          just = c("left", "bottom"),
+          default.units = "in")
+grid.rect(x = x_limits[1],
+          y = y_limits[1],
+          width = x_limits[2],
+          height = .25 / 2,
+          gp = gpar(col = hex(line_color),
+                    fill = hex(line_color)),
+          just = c("left", "bottom"),
+          default.units = "in")
+
+grid.circle(x = x_limits[1],
+            y = y_limits[1],
+            r = .25,
+            gp = gpar(col = hex(point_color),
+                      fill = hex(point_color)),
+            default.units = "in")
+grid.circle(x = x_limits[2],
+            y = y_limits[1],
+            r = .25,
+            gp = gpar(col = hex(point_color),
+                      fill = hex(point_color)),
+            default.units = "in")
+grid.circle(x = x_limits[2],
+            y = y_limits[2],
+            r = .25,
+            gp = gpar(col = hex(point_color),
+                      fill = hex(point_color)),
+            default.units = "in")
+grid.circle(x = x_limits[1],
+            y = y_limits[2],
+            r = .25,
+            gp = gpar(col = hex(point_color),
+                      fill = hex(point_color)),
+            default.units = "in")
+
 dev.off()

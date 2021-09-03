@@ -50,7 +50,8 @@ line_points <- function(circle_x, circle_y, circle_radius, radius, chord) {
   # we know one angle is 90*
   # one side is circle_radius
   # one side is chord
-  new_angle = pi - pi/2 - asin(((chord * circle_radius) * sin(pi/2)) / circle_radius)
+  new_angle = pi - pi/2 - asin(((chord * circle_radius) * 
+                                  sin(pi/2)) / circle_radius)
   
   # now rotate these points around to the radius
   x_1_moved = cos(new_angle) * x_1 - sin(new_angle) * y_1
@@ -86,7 +87,8 @@ line_points <- function(circle_x, circle_y, circle_radius, radius, chord) {
 # H_bound is the limit on H
 get_color_points <- function(n_points, oversample,
                              H_point, C_point, L_point,
-                             theta_radius, other_C_L_radius, perpendicular_C_L_radius,
+                             theta_radius, other_C_L_radius, 
+                             perpendicular_C_L_radius,
                              tilt_theta, H_bound) {
   data.frame(x = rnorm(n = n_points * oversample), # over sample in case some points fail
              y = rnorm(n = n_points * oversample),
@@ -119,7 +121,8 @@ get_color_points <- function(n_points, oversample,
     filter(L >= 0 & L <= 100 & C >= 0) %>%
     mutate(color_value = hcl(H, C, L, fixup = FALSE)) %>%
     filter(!is.na(color_value)) %>% # check if exists
-    mutate(H_diff = (180 - abs(abs(H - H_point) - 180)) * sign(180 - abs(H - H_point)) * sign(H - H_point)) %>% # H diff, check if crosses 360
+    mutate(H_diff = (180 - abs(abs(H - H_point) - 180)) * 
+             sign(180 - abs(H - H_point)) * sign(H - H_point)) %>% # H diff, check if crosses 360
     filter(abs(H_diff) <= H_bound) %>% # check in H bound
     filter(!is.na(hcl(H_point - H_diff, C, L, fixup = FALSE))) %>% # symmetric
     select(!H_diff) %>%
@@ -150,7 +153,8 @@ H_bound <- 3
 
 ## tilt the ellipse towards L = max_chroma
 max_chromas <- max_chroma(h = coords(line_color)[, 'H'], l = seq(1, 100, .5))
-tilt_theta <- atan2(seq(1, 100, .5)[max(max_chromas) == max_chromas] - coords(line_color)[, 'L'],
+tilt_theta <- atan2(seq(1, 100, .5)[max(max_chromas) == max_chromas] - 
+                      coords(line_color)[, 'L'],
                     max(max_chromas) - coords(line_color)[, 'C'])
 
 line_colors <- get_color_points(n_lines,
@@ -169,7 +173,8 @@ lines$line_color <- line_colors$color_value
 # Repeat for points
 ## tilt the ellipse towards L = 25
 max_chromas <- max_chroma(h = coords(point_color)[, 'H'], l = seq(1, 100, .5))
-tilt_theta <- atan2(seq(1, 100, .5)[max(max_chromas) == max_chromas] - coords(point_color)[, 'L'],
+tilt_theta <- atan2(seq(1, 100, .5)[max(max_chromas) == max_chromas] - 
+                      coords(point_color)[, 'L'],
                     max(max_chromas) - coords(point_color)[, 'C'])
 
 point_colors <- get_color_points(n_lines,

@@ -228,8 +228,10 @@ get_xyl_data <- function(H_point, C_point, L_point, width, n_color) {
                              l = L)) %>%
     mutate(x = C * cos(H * pi/180),
            y = C * sin(H * pi/180)) %>%
-    mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + y * cos(-H_point * pi/180),
-           parallel_along_C_L = x * cos(-H_point * pi/180) - y * sin(-H_point * pi/180)) %>%
+    mutate(perpendicular_from_C_L = x * sin(-H_point * pi/180) + 
+             y * cos(-H_point * pi/180),
+           parallel_along_C_L = x * cos(-H_point * pi/180) - 
+             y * sin(-H_point * pi/180)) %>%
     mutate(row_value = sample(row_number(), n()),
            col_value = ceiling(row_value / sqrt(n_color))) %>%
     mutate(row_value = (row_value %% sqrt(n_color)) + 1) %>%
@@ -432,7 +434,8 @@ graph_H_L_by_C <- function(color_points, H_point) {
 }
 
 get_H_L_curve_by_C <- function(color_points) {
-  map_dfr(as.numeric(as.character(unique(color_points$C_cut))), get_H_L_curve) %>%
+  map_dfr(as.numeric(as.character(
+    unique(color_points$C_cut))), get_H_L_curve) %>%
     mutate(C_cut = as.factor(C))
 }
 H_L_curve_by_C <- get_H_L_curve_by_C(xyl)
@@ -916,9 +919,9 @@ ggsave(here::here("output", "color_compare", "compare_samples2.png"),
 ## Try lower value of C ----
 C_point <- 16
 
-hcl <- get_hcl_data(H_point, C_point, L_point, width, n_color)
-
 xyl <- get_xyl_data(H_point, C_point, L_point, width, n_color)
+
+hcl <- get_hcl_data(H_point, C_point, L_point, width, n_color)
 
 compare <- rbind(xyl[, c('H', 'C', 'L', 'x', 'y', 
                          'H_cut', 'C_cut', 'L_cut', 
@@ -1005,9 +1008,9 @@ ggsave(here::here("output", "color_compare", "C_lower_samples2.png"),
 ## Try higher value of C ----
 C_point <- 75
  
-hcl <- get_hcl_data(H_point, C_point, L_point, width, n_color)
-
 xyl <- get_xyl_data(H_point, C_point, L_point, width, n_color)
+
+hcl <- get_hcl_data(H_point, C_point, L_point, width, n_color)
 
 compare <- rbind(xyl[, c('H', 'C', 'L', 'x', 'y', 
                          'H_cut', 'C_cut', 'L_cut', 

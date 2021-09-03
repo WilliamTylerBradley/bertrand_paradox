@@ -194,7 +194,7 @@ grid.circle(x = circle_h,
             r = circle_r,
             default.units = "in",
             gp = gpar(col = hex(line_color),
-                      lwd=10))
+                      lwd = 10))
 
 for(i in 1:nrow(lines)) {
   grid.lines(x = c(lines$point_1_x[i], lines$point_2_x[i]),

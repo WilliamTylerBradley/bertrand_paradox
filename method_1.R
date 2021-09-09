@@ -7,12 +7,12 @@ library(colorspace)
 library(here)
 library(ragg)
 
-set.seed(100)
+set.seed(1)
 
 ##------------------
 # Variables
 ##------------------
-n_lines <- 5000
+n_lines <- 4000
 x_limits <- c(0, 18)
 y_limits <- c(0, 24)
 line_color <- as(hex2RGB("#C4722C"), "polarLUV") # Dark orange - yellow
@@ -176,10 +176,6 @@ point_colors <- get_color_points(n_lines,
 
 lines$point_color <- point_colors$color_value
 
-## Set alpha
-lines <- lines %>% 
-  mutate(alpha_value = .95 - (row_number()/n_lines)*.5)
-
 ##-----
 # Image
 ##-----
@@ -199,8 +195,7 @@ grid.circle(x = circle_h,
 for(i in 1:nrow(lines)) {
   grid.lines(x = c(lines$point_1_x[i], lines$point_2_x[i]),
              y = c(lines$point_1_y[i], lines$point_2_y[i]),
-             gp = gpar(col = lines$line_color[i],
-                       alpha = lines$alpha_value[i]),
+             gp = gpar(col = lines$line_color[i]),
              default.units = "in")
 }
 

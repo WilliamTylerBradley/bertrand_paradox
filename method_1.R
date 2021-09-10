@@ -41,10 +41,10 @@ circle_k = y_limits[2] - circle_r - ((x_limits[2] - x_limits[1]) * .25 * .5)
 # point_1_x, point_1_y, point_2_x, point_2_y, midpoint_x, midpoint_y
 line_points <- function(circle_x, circle_y, circle_radius, point_1, point_2) {
   # Get x,y values
-  point_1_x = circle_h + circle_r * cos(point_1)
-  point_1_y = circle_k + circle_r * sin(point_1)
-  point_2_x = circle_h + circle_r * cos(point_2)
-  point_2_y = circle_k + circle_r * sin(point_2)
+  point_1_x = circle_x + circle_r * cos(point_1)
+  point_1_y = circle_y + circle_r * sin(point_1)
+  point_2_x = circle_x + circle_r * cos(point_2)
+  point_2_y = circle_y + circle_r * sin(point_2)
   
   # Get midpoints
   midpoint_x = (point_1_x + point_2_x) / 2

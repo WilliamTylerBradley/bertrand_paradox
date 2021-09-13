@@ -25,7 +25,7 @@ graph_info <- function(H_point, C_point, L_point) {
                                           paste("H Value:", H_point),
                                           paste("C Value:", C_point),
                                           paste("L Value:", L_point))),
-              aes(x, y, label = label), hjust = 0, size = 4) +
+              aes(x, y, label = label), hjust = 0, size = 2) +
     coord_equal() +
     theme_void()
 }
@@ -53,22 +53,26 @@ get_C_L_plane <- function(H_point) {
 graph_C_L_plane <- function(C_L_plane, color_points) {
   ggplot() +
     geom_point(data = C_L_plane,
-               aes(C, L, color = color_value, fill = color_value)) +
+               aes(C, L, color = color_value, fill = color_value), size = .5) +
     geom_point(data = color_points,
-               aes(C, L, color = "white", fill = "white")) +
+               aes(C, L, color = "white", fill = "white"), size = .5) +
     scale_x_continuous(labels = abs) +
     scale_color_identity() +
     scale_fill_identity() +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 graph_C_L <- function(color_points) {
   ggplot(data = color_points, aes(C, L, 
                                   col = color_value, fill = color_value)) +
-    geom_point() +
+    geom_point(size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
-    coord_equal() 
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 # H C plane ----
@@ -83,9 +87,9 @@ get_H_C_plane <- function(L_point){
 graph_H_C_plane <- function(H_C_plane, color_points) {
   ggplot() +
     geom_point(data = H_C_plane,
-               aes(H, C, color = color_value, fill = color_value)) +
+               aes(H, C, color = color_value, fill = color_value), size = .5) +
     geom_point(data = color_points,
-               aes(H, C, color = "white", fill = "white")) +
+               aes(H, C, color = "white", fill = "white"), size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_continuous(breaks = seq(45, 360, 45),
@@ -94,7 +98,9 @@ graph_H_C_plane <- function(H_C_plane, color_points) {
                                   '225', '270', '315', '0|360')) +
     scale_y_continuous(limits = c(0, 180)) +
     coord_polar(start = 270 * pi / 180,
-                direction = -1)
+                direction = -1) +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 graph_x_y <- function(color_points, H_point) {
@@ -112,11 +118,13 @@ graph_x_y <- function(color_points, H_point) {
     geom_abline(slope = tan(H_point * pi/180), 
                 intercept = 0,
                 color = "black") +
-    geom_point() +
+    geom_point(size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     coord_equal() +
-    theme(axis.line=element_blank(), axis.text.x=element_blank(),
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"),
+          axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
           axis.title.x=element_blank(), axis.title.y=element_blank(),
           panel.grid.major=element_blank(), panel.grid.minor=element_blank())
@@ -231,38 +239,36 @@ color_hexes <- hcl(H_points,
 C_L_planes <- map(H_points, get_C_L_plane)
 H_C_planes <- map(L_points, get_H_C_plane)
 
-
-
 ## 1, 2
 p1 <- graph_info(H_points[1], C_points[1], L_points[1])
 p2 <- graph_sample(color_points[[1]])
 p3 <- graph_info(H_points[2], C_points[2], L_points[2])
 p4 <- graph_sample(color_points[[2]])
 (p1 + p2) / (p3 + p4)
-ggsave(here::here("output", "bertrand_colors", "1_2_info.png"), 
-       width = 5, height = 7)
+ggsave(here::here("output", "bertrand_colors", "1_2_info.jpeg"), 
+       width = 2.5, height = 3.5)
 
 p1 <- graph_C_L_plane(C_L_planes[[1]], color_points[[1]])
 p2 <- graph_C_L(color_points[[1]])
 p3 <- graph_C_L_plane(C_L_planes[[2]], color_points[[2]])
 p4 <- graph_C_L(color_points[[2]])
 p1 + p2 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "1_c_l.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "bertrand_colors", "1_c_l.jpeg"), 
+       width = 2.5, height = 1)
 p3 + p4 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "2_c_l.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "bertrand_colors", "2_c_l.jpeg"), 
+       width = 2.5, height = 1)
 
 p1 <- graph_H_C_plane(H_C_planes[[1]], color_points[[1]])
 p2 <- graph_x_y(color_points[[1]], H_points[[1]])
 p3 <- graph_H_C_plane(H_C_planes[[2]], color_points[[2]])
 p4 <- graph_x_y(color_points[[2]], H_points[[2]])
 p1 + p2 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "1_h_c.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "bertrand_colors", "1_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 p3 + p4 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "2_h_c.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "bertrand_colors", "2_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ## 3, 4
 p1 <- graph_info(H_points[3], C_points[3], L_points[3])
@@ -270,30 +276,30 @@ p2 <- graph_sample(color_points[[3]])
 p3 <- graph_info(H_points[4], C_points[4], L_points[4])
 p4 <- graph_sample(color_points[[4]])
 (p1 + p2) / (p3 + p4)
-ggsave(here::here("output", "bertrand_colors", "3_4_info.png"), 
-       width = 5, height = 7)
+ggsave(here::here("output", "bertrand_colors", "3_4_info.jpeg"), 
+       width = 2.5, height = 3.5)
 
 p1 <- graph_C_L_plane(C_L_planes[[3]], color_points[[3]])
 p2 <- graph_C_L(color_points[[3]])
 p3 <- graph_C_L_plane(C_L_planes[[4]], color_points[[4]])
 p4 <- graph_C_L(color_points[[4]])
 p1 + p2 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "3_c_l.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "bertrand_colors", "3_c_l.jpeg"), 
+       width = 2.5, height = 1)
 p3 + p4 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "4_c_l.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "bertrand_colors", "4_c_l.jpeg"), 
+       width = 2.5, height = 1)
 
 p1 <- graph_H_C_plane(H_C_planes[[3]], color_points[[3]])
 p2 <- graph_x_y(color_points[[3]], H_points[[3]])
 p3 <- graph_H_C_plane(H_C_planes[[4]], color_points[[4]])
 p4 <- graph_x_y(color_points[[4]], H_points[[4]])
 p1 + p2 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "3_h_c.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "bertrand_colors", "3_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 p3 + p4 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "4_h_c.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "bertrand_colors", "4_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ## 5, 6
 p1 <- graph_info(H_points[5], C_points[5], L_points[5])
@@ -301,27 +307,27 @@ p2 <- graph_sample(color_points[[5]])
 p3 <- graph_info(H_points[6], C_points[6], L_points[6])
 p4 <- graph_sample(color_points[[6]])
 (p1 + p2) / (p3 + p4)
-ggsave(here::here("output", "bertrand_colors", "5_6_info.png"), 
-       width = 5, height = 7)
+ggsave(here::here("output", "bertrand_colors", "5_6_info.jpeg"), 
+       width = 2.5, height = 3.5)
 
 p1 <- graph_C_L_plane(C_L_planes[[5]], color_points[[5]])
 p2 <- graph_C_L(color_points[[5]])
 p3 <- graph_C_L_plane(C_L_planes[[6]], color_points[[6]])
 p4 <- graph_C_L(color_points[[6]])
 p1 + p2 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "5_c_l.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "bertrand_colors", "5_c_l.jpeg"), 
+       width = 2.5, height = 1)
 p3 + p4 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "6_c_l.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "bertrand_colors", "6_c_l.jpeg"), 
+       width = 2.5, height = 1)
 
 p1 <- graph_H_C_plane(H_C_planes[[5]], color_points[[5]])
 p2 <- graph_x_y(color_points[[5]], H_points[[5]])
 p3 <- graph_H_C_plane(H_C_planes[[6]], color_points[[6]])
 p4 <- graph_x_y(color_points[[6]], H_points[[6]])
 p1 + p2 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "5_h_c.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "bertrand_colors", "5_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 p3 + p4 + plot_layout(widths = c(1, 1))
-ggsave(here::here("output", "bertrand_colors", "6_h_c.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "bertrand_colors", "6_h_c.jpeg"), 
+       width = 2.5, height = 1.25)

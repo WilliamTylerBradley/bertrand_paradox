@@ -33,7 +33,8 @@ C_L_plane <- get_C_L_plane(H_point)
 graph_C_L_plane <- function(C_L_plane, color_hex) {
   ggplot() +
     geom_point(data = C_L_plane,
-               aes(C, L, color = color_value, fill = color_value)) +
+               aes(C, L, color = color_value, fill = color_value),
+               size = .5) +
     scale_x_continuous(labels = abs) +
     scale_color_identity() +
     scale_fill_identity() +
@@ -42,12 +43,13 @@ graph_C_L_plane <- function(C_L_plane, color_hex) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
-    coord_equal()
+               size = .5) +
+    coord_equal() +
+    theme(text = element_text(size = 5))
 }
 graph_C_L_plane(C_L_plane, color_hex)
-ggsave(here::here("output", "color_compare", "c_l_plane.png"), 
-       width = 5, height = max(C_L_plane$L) / max(C_L_plane$C) * 5)
+ggsave(here::here("output", "color_compare", "c_l_plane.jpeg"), 
+       width = 2.5, height = max(C_L_plane$L) / max(C_L_plane$C) * 2.5)
 
 # H-L Curve ----
 get_H_L_curve <- function(C_point) {
@@ -67,7 +69,8 @@ graph_H_L_curve <- function(H_L_curve, color_hex, H_point) {
   ggplot() +
     geom_point(data = H_L_curve,
                aes((H + (180 - H_point)) %% 360, L, 
-                   color = color_value, fill = color_value)) +
+                   color = color_value, fill = color_value),
+               size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     geom_point(aes(x = 180, # Because we rotated points to not drop over edge
@@ -75,15 +78,16 @@ graph_H_L_curve <- function(H_L_curve, color_hex, H_point) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
+               size = .5) +
     scale_x_reverse('H', # Like you're standing on the inside
                     labels = label_H_center(H_point = H_point),
                     limits = c(360, 0)) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5))
 }
 graph_H_L_curve(H_L_curve, color_hex, H_point)
-ggsave(here::here("output", "color_compare", "h_l_curve.png"), 
-       width = 5, height = max(H_L_curve$L) / max(H_L_curve$H) * 5)
+ggsave(here::here("output", "color_compare", "h_l_curve.jpeg"), 
+       width = 2.5, height = max(H_L_curve$L) / max(H_L_curve$H) * 2.5)
 
 # H-C plane ----
 get_H_C_plane <- function(L_point){
@@ -98,7 +102,8 @@ H_C_plane <- get_H_C_plane(L_point)
 graph_H_C_plane <- function(H_C_plane, color_hex) {
   ggplot() +
     geom_point(data = H_C_plane,
-               aes(H, C, color = color_value, fill = color_value)) +
+               aes(H, C, color = color_value, fill = color_value),
+               size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_continuous(breaks = seq(45, 360, 45),
@@ -111,13 +116,14 @@ graph_H_C_plane <- function(H_C_plane, color_hex) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
+               size = .5) +
     coord_polar(start = 270 * pi / 180,
-                direction = -1)
+                direction = -1) +
+    theme(text = element_text(size = 5))
 }
 graph_H_C_plane(H_C_plane, color_hex)
-ggsave(here::here("output", "color_compare", "h_c_plane.png"), 
-       width = 5, height = 5)
+ggsave(here::here("output", "color_compare", "h_c_plane.jpeg"), 
+       width = 2.5, height = 2.5)
 
 # C tangent plane ----
 C_circle <- data.frame(H = seq(1, 360),
@@ -139,7 +145,7 @@ C_tangent_plane <- expand_grid(x = C_point, # Plane perpendicular to H at C
   mutate(color_value = "white")
 ggplot(data = H_C_plane,
        aes(H, C, color = color_value, fill = color_value)) +
-  geom_point() +
+  geom_point(size = .5) +
   scale_color_identity() +
   scale_fill_identity() +
   scale_x_continuous(breaks = seq(45, 360, 45),
@@ -153,16 +159,19 @@ ggplot(data = H_C_plane,
                xend = H_point,
                yend = C_point,
                col = "white") +
-  geom_point(data = C_tangent_plane, col = "black") +
+  geom_point(data = C_tangent_plane, col = "black",
+             size = .5) +
   geom_point(x = H_point,
              y = C_point,
              color = 'black',
              fill = color_hex,
-             shape = 21) +
+             shape = 21,
+             size = .5) +
   coord_polar(start = 270 * pi / 180,
-              direction = -1)
-ggsave(here::here("output", "color_compare", "c_tangent_plane_setup.png"), 
-       width = 5, height = 5)
+              direction = -1) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "c_tangent_plane_setup.jpeg"), 
+       width = 2.5, height = 2.5)
 
 get_C_tangent_plane <- function(H_point, C_point) {
   expand_grid(x = C_point, # Plane perpendicular to H at C
@@ -186,7 +195,8 @@ graph_C_tangent_plane <- function(C_tangent_plane, color_hex) {
   ggplot() +
     geom_point(data = C_tangent_plane,
                aes(perpendicular_from_C_L, L, 
-                   color = color_value, fill = color_value)) +
+                   color = color_value, fill = color_value),
+               size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_reverse("Distance Perpendicular to C-L Plane",
@@ -196,13 +206,14 @@ graph_C_tangent_plane <- function(C_tangent_plane, color_hex) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
-    coord_equal()
+               size = .5) +
+    coord_equal() +
+    theme(text = element_text(size = 5))
 }
 graph_C_tangent_plane(C_tangent_plane, color_hex)
-ggsave(here::here("output", "color_compare", "c_tangent_plane.png"), 
-       width = 5, height = max(C_tangent_plane$L) /
-         (max(C_tangent_plane$perpendicular_from_C_L) * 2) * 5)
+ggsave(here::here("output", "color_compare", "c_tangent_plane.jpeg"), 
+       width = 2.5, height = max(C_tangent_plane$L) /
+         (max(C_tangent_plane$perpendicular_from_C_L) * 2) * 2.5)
 
 ##------------------
 # x, y, L perimeter
@@ -348,7 +359,7 @@ graph_info <- function(H_point, C_point, L_point) {
                                           paste("H Value:", H_point),
                                           paste("C Value:", C_point),
                                           paste("L Value:", L_point))),
-              aes(x, y, label = label), hjust = 0, size = 4) +
+              aes(x, y, label = label), hjust = 0, size = 2) +
     coord_equal() +
     theme_void()
 }
@@ -367,18 +378,20 @@ graph_sample <- function(color_points) {
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(xyl)
 p1 + p2
-ggsave(here::here("output", "color_compare", "xyl_info.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "xyl_info.jpeg"), 
+       width = 2.5, height = 1.5)
 
 # C L plane by H
 graph_C_L_by_H <- function(color_points) {
   ggplot(data = color_points, aes(C, L, 
                                   col = color_value, fill = color_value)) +
-    geom_point() +
+    geom_point(size = .25) +
     scale_color_identity() +
     scale_fill_identity() +
     facet_wrap(~ H_cut, nrow = 2) +
-    coord_equal() 
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 
 get_C_L_plane_by_H <- function(color_points, H_point, width) {
@@ -404,33 +417,39 @@ C_L_plane_by_H <- get_C_L_plane_by_H(xyl, H_point, width)
 graph_C_L_plane_by_H <- function(C_L_plane, color_points) {
   ggplot() +
     geom_point(data = C_L_plane,
-               aes(C, L, color = color_value, fill = color_value)) +
+               aes(C, L, color = color_value, fill = color_value),
+               size = .25) +
     geom_point(data = color_points,
-               aes(C, L, color = "white", fill = "white")) +
+               aes(C, L, color = "white", fill = "white"),
+               size = .25) +
     scale_x_continuous(labels = abs) +
     scale_color_identity() +
     scale_fill_identity() +
     facet_wrap(~ H_cut, nrow = 2) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 graph_C_L_plane_by_H(C_L_plane_by_H, xyl)
-ggsave(here::here("output", "color_compare", "xyl_c_l_plane.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "color_compare", "xyl_c_l_plane.jpeg"), 
+       width = 2.5, height = 1.25)
 graph_C_L_by_H(xyl)
-ggsave(here::here("output", "color_compare", "xyl_c_l.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "xyl_c_l.jpeg"), 
+       width = 2.5, height = 1.5)
 
 # H L curve
 graph_H_L_by_C <- function(color_points, H_point) {
   ggplot(data = color_points, aes((H + (180 - H_point)) %% 360, L, 
                                   color = color_value, fill = color_value)) +
-    geom_point() +
+    geom_point(size = .25) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_reverse('H', # Like you're standing on the inside
                     labels = label_H_center(H_point = H_point)) +
     facet_wrap(~ C_cut, nrow = 2) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 
 get_H_L_curve_by_C <- function(color_points) {
@@ -444,24 +463,28 @@ graph_H_L_curve_by_C <- function(H_L_curve_by_C, color_points, H_point) {
   ggplot() +
     geom_point(data = H_L_curve_by_C,
                aes((H + (180 - H_point)) %% 360, L, 
-                   color = color_value, fill = color_value)) +
+                   color = color_value, fill = color_value),
+               size = .25) +
     geom_point(data = color_points,
                aes((H + (180 - H_point)) %% 360, L, 
-                   color = "white", fill = "white")) +
+                   color = "white", fill = "white"),
+               size = .25) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_reverse('H', # Like you're standing on the inside
                     labels = label_H_center(H_point = H_point),
                     limits = c(360, 0)) +
     facet_wrap(~ C_cut, nrow = 2) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 graph_H_L_curve_by_C(H_L_curve_by_C, xyl, H_point)
-ggsave(here::here("output", "color_compare", "xyl_h_l_curve.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "color_compare", "xyl_h_l_curve.jpeg"), 
+       width = 2.5, height = 1)
 graph_H_L_by_C(xyl, H_point)
-ggsave(here::here("output", "color_compare", "xyl_h_l.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "color_compare", "xyl_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 # H C plane by L
 graph_x_y_by_L <- function(color_points, H_point) {
@@ -479,7 +502,7 @@ graph_x_y_by_L <- function(color_points, H_point) {
     geom_abline(slope = tan(H_point * pi/180), 
                 intercept = 0,
                 color = "black") +
-    geom_point() +
+    geom_point(size = .25) +
     scale_color_identity() +
     scale_fill_identity() +
     facet_wrap(~ L_cut, nrow = 2) +
@@ -487,7 +510,8 @@ graph_x_y_by_L <- function(color_points, H_point) {
     theme(axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
           axis.title.x=element_blank(), axis.title.y=element_blank(),
-          panel.grid.major=element_blank(), panel.grid.minor=element_blank())
+          panel.grid.major=element_blank(), panel.grid.minor=element_blank(),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 
 get_H_C_plane_by_L <- function(color_points) {
@@ -500,9 +524,11 @@ H_C_plane_by_L <- get_H_C_plane_by_L(xyl)
 graph_H_C_plane_by_L <- function(H_C_plane_by_L, color_points) {
   ggplot() +
     geom_point(data = H_C_plane_by_L,
-               aes(H, C, color = color_value, fill = color_value)) +
+               aes(H, C, color = color_value, fill = color_value),
+               size = .25) +
     geom_point(data = color_points,
-               aes(H , C, color = "white", fill = "white")) +
+               aes(H , C, color = "white", fill = "white"),
+               size = .25) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_continuous(breaks = seq(45, 360, 45),
@@ -512,15 +538,16 @@ graph_H_C_plane_by_L <- function(H_C_plane_by_L, color_points) {
     scale_y_continuous(limits = c(0, 180)) +
     facet_wrap(~ L_cut, nrow = 2) +
     coord_polar(start = 270 * pi / 180,
-                direction = -1)
+                direction = -1) +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 graph_H_C_plane_by_L(H_C_plane_by_L, xyl)
-ggsave(here::here("output", "color_compare", "xyl_h_c_plane.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "xyl_h_c_plane.jpeg"), 
+       width = 2.5, height = 2)
 graph_x_y_by_L(xyl, H_point)
-ggsave(here::here("output", "color_compare", "xyl_h_c.png"), 
-       width = 5, height = 3)
-
+ggsave(here::here("output", "color_compare", "xyl_h_c.jpeg"), 
+       width = 2.5, height = 1.5)
 
 # C tangent plane
 label_perpendicular_from_C_L_cut<- function(x) {
@@ -532,50 +559,56 @@ graph_parallel_perpendicular_by_L <- function(color_points) {
          aes(x = parallel_along_C_L,
              y = perpendicular_from_C_L,
              color = color_value)) +
-    geom_point() +
+    geom_point(size = .25) +
     scale_color_identity() +
     scale_y_continuous("Distance Perpendicular to C-L Plane", # similar to H
                        labels = abs) +
     labs(x = "Distance Parallel to C-L Plane") + # similar to C
     facet_wrap(~ L_cut, nrow = 2) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 graph_parallel_perpendicular_by_L(xyl)
-ggsave(here::here("output", "color_compare", "xyl_par_per.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "xyl_par_per.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_perpendicular_L_by_parallel <- function(color_points) {
   ggplot(data = color_points, 
          aes(x = perpendicular_from_C_L,
              y = L,
              color = color_value)) +
-    geom_point() +
+    geom_point(size = .25) +
     scale_color_identity() +
     scale_x_continuous("Distance Perpendicular to C-L Plane",
                        labels = abs) +
     scale_y_continuous(labels = abs) +
     facet_wrap(~ parallel_along_C_L_cut, nrow = 2) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 graph_perpendicular_L_by_parallel(xyl)
-ggsave(here::here("output", "color_compare", "xyl_per_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "xyl_per_l.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_parallel_L_by_perpendicular <- function(color_points) {
   ggplot(data = color_points, 
          aes(x = parallel_along_C_L,
              y = L,
              color = color_value)) +
-    geom_point() +
+    geom_point(size = .25) +
     scale_color_identity() +
     labs(x = "Distance Parallel to C-L Plane") +
     facet_wrap(~ perpendicular_from_C_L_cut, nrow = 2,
                labeller = as_labeller(label_perpendicular_from_C_L_cut)) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")))
 }
 graph_parallel_L_by_perpendicular(xyl)
-ggsave(here::here("output", "color_compare", "xyl_par_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "xyl_par_l.jpeg"), 
+       width = 2.5, height = 2)
 
 ##------------------
 # H, C, L, perimeter
@@ -704,48 +737,48 @@ hcl <- get_hcl_data(H_point, C_point, L_point, width, n_color)
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(hcl)
 p1 + p2
-ggsave(here::here("output", "color_compare", "hcl_info.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "hcl_info.jpeg"), 
+       width = 2.5, height = 1.5)
 
 # C L plane by H
 C_L_plane_by_H <- get_C_L_plane_by_H(hcl, H_point, width)
 graph_C_L_by_H(hcl)
-ggsave(here::here("output", "color_compare", "hcl_c_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "hcl_c_l.jpeg"), 
+       width = 2.5, height = 2)
 graph_C_L_plane_by_H(C_L_plane_by_H, hcl)
-ggsave(here::here("output", "color_compare", "hcl_c_l_plane.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "hcl_c_l_plane.jpeg"), 
+       width = 2.5, height = 1.5)
 
 # H L curve
 H_L_curve_by_C <- get_H_L_curve_by_C(hcl)
 graph_H_L_by_C(hcl, H_point)
-ggsave(here::here("output", "color_compare", "hcl_h_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "hcl_h_l.jpeg"), 
+       width = 2.5, height = 2)
 graph_H_L_curve_by_C(H_L_curve_by_C, hcl, H_point)
-ggsave(here::here("output", "color_compare", "hcl_h_l_curve.png"), 
-       width = 5, height = 2)
+ggsave(here::here("output", "color_compare", "hcl_h_l_curve.jpeg"), 
+       width = 2.5, height = 1.5)
 
 # H C plane by L
 H_C_plane_by_L <- get_H_C_plane_by_L(hcl)
 graph_x_y_by_L(hcl, H_point)
-ggsave(here::here("output", "color_compare", "hcl_h_c.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "hcl_h_c.jpeg"), 
+       width = 2.5, height = 1.5)
 graph_H_C_plane_by_L(H_C_plane_by_L, hcl)
-ggsave(here::here("output", "color_compare", "hcl_h_c_plane.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "hcl_h_c_plane.jpeg"), 
+       width = 2.5, height = 2)
 
 # C tangent plane
 graph_parallel_perpendicular_by_L(hcl)
-ggsave(here::here("output", "color_compare", "hcl_par_per.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "hcl_par_per.jpeg"), 
+       width = 2.5, height = 1.5)
 
 graph_perpendicular_L_by_parallel(hcl)
-ggsave(here::here("output", "color_compare", "hcl_per_l.png"), 
-       width = 5, height = 6)
+ggsave(here::here("output", "color_compare", "hcl_per_l.jpeg"), 
+       width = 2.5, height = 3)
 
 graph_parallel_L_by_perpendicular(hcl)
-ggsave(here::here("output", "color_compare", "hcl_par_l.png"), 
-       width = 5, height = 5)
+ggsave(here::here("output", "color_compare", "hcl_par_l.jpeg"), 
+       width = 2.5, height = 2.5)
 
 ##-------
 # Compare
@@ -765,31 +798,43 @@ compare <- rbind(xyl[, c('H', 'C', 'L', 'x', 'y',
 # C L plane
 graph_C_L_by_H_comparison <- function(color_points) {
   ggplot(data = color_points, aes(C, L, col = setting)) +
-    geom_point(alpha = .5) +
+    geom_point(alpha = .5,
+               size = .25) +
     facet_wrap(~ H_cut, nrow = 2) +
     coord_equal() +
     scale_color_discrete("") +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")),
+          legend.margin=margin(0, 0, 0, 0),
+          legend.box.margin=margin(-10, -10, -10, -10),
+          legend.key.size = unit(.1, 'in'))
 }
 graph_C_L_by_H_comparison(compare)
-ggsave(here::here("output", "color_compare", "compare_c_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "compare_c_l.jpeg"), 
+       width = 2.5, height = 1.75)
 
 # H L curve
 graph_H_L_by_C_comparison <- function(color_points, H_point) {
   ggplot(data = color_points, 
          aes((H + (180 - H_point)) %% 360, L, color = setting)) +
-    geom_point(alpha = .5) +
+    geom_point(alpha = .5,
+               size = .25) +
     scale_x_reverse('H',
                     labels = label_H_center(H_point = H_point)) +
     facet_wrap(~ C_cut, nrow = 2) +
     coord_equal() +
     scale_color_discrete("") +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")),
+          legend.margin=margin(0, 0, 0, 0),
+          legend.box.margin=margin(-10, -10, -10, -10),
+          legend.key.size = unit(.1, 'in'))
 }
 graph_H_L_by_C_comparison(compare, H_point)
-ggsave(here::here("output", "color_compare", "compare_h_l.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_compare", "compare_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 # H C plane
 graph_x_y_by_L_comparison <- function(color_points, H_point) {
@@ -806,19 +851,25 @@ graph_x_y_by_L_comparison <- function(color_points, H_point) {
     geom_abline(slope = tan(H_point * pi/180), 
                 intercept = 0,
                 color = "black") +
-    geom_point(alpha = .5) +
+    geom_point(alpha = .5,
+               size = .25) +
     facet_wrap(~ L_cut, nrow = 2) +
     coord_equal() +
     scale_color_discrete("") +
     theme(legend.position = "bottom",
+          text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")),
+          legend.margin=margin(0, 0, 0, 0),
+          legend.box.margin=margin(-10, -10, -10, -10),
+          legend.key.size = unit(.1, 'in'),
           axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
           axis.title.x=element_blank(), axis.title.y=element_blank(),
           panel.grid.major=element_blank(), panel.grid.minor=element_blank())
 }
 graph_x_y_by_L_comparison(compare, H_point)
-ggsave(here::here("output", "color_compare", "compare_h_c.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "compare_h_c.jpeg"), 
+       width = 2.5, height = 2)
 
 # C tangent plane
 graph_parallel_perpendicular_by_L_comparison <- function(color_points) {
@@ -826,53 +877,71 @@ graph_parallel_perpendicular_by_L_comparison <- function(color_points) {
          aes(x = parallel_along_C_L,
              y = perpendicular_from_C_L,
              color = setting)) +
-    geom_point(alpha = .5) +
+    geom_point(alpha = .5,
+               size = .25) +
     scale_y_continuous("Distance Perpendicular to C-L Plane",
                        labels = abs) +
     labs(x = "Distance Parallel to C-L Plane") +
     facet_wrap(~ L_cut, nrow = 2) +
     coord_equal() +
     scale_color_discrete("") +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")),
+          legend.margin=margin(0, 0, 0, 0),
+          legend.box.margin=margin(-10, -10, -10, -10),
+          legend.key.size = unit(.1, 'in'))
 }
 graph_parallel_perpendicular_by_L_comparison(compare)
-ggsave(here::here("output", "color_compare", "compare_par_per.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "compare_par_per.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_perpendicular_L_by_parallel_comparison <- function(color_points) {
   ggplot(data = color_points, 
          aes(x = perpendicular_from_C_L,
              y = L,
              color = setting)) +
-    geom_point(alpha = .5) +
+    geom_point(alpha = .5,
+               size = .25) +
     scale_x_continuous("Distance Perpendicular to C-L Plane", 
             labels = abs) +
     scale_y_continuous(labels = abs) +
     facet_wrap(~ parallel_along_C_L_cut, nrow = 2) +
     coord_equal() +
     scale_color_discrete("") +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")),
+          legend.margin=margin(0, 0, 0, 0),
+          legend.box.margin=margin(-10, -10, -10, -10),
+          legend.key.size = unit(.1, 'in'))
 }
 graph_perpendicular_L_by_parallel_comparison(compare)
-ggsave(here::here("output", "color_compare", "compare_per_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "compare_per_l.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_parallel_L_by_perpendicular_comparison <- function(color_points) {
   ggplot(data = color_points, 
          aes(x = parallel_along_C_L,
              y = L,
              color = setting)) +
-    geom_point(alpha = .5) +
+    geom_point(alpha = .5,
+               size = .25) +
     labs(x = "Distance Parallel to C-L Plane") +
     facet_wrap(~ perpendicular_from_C_L_cut, nrow = 2,
                labeller = as_labeller(label_perpendicular_from_C_L_cut)) +
     coord_equal() +
     scale_color_discrete("") +
-    theme(legend.position = "bottom")
+    theme(legend.position = "bottom",
+          text = element_text(size = 5),
+          strip.text = element_text(margin = unit(c(0, 0, 0, 0), "null")),
+          legend.margin=margin(0, 0, 0, 0),
+          legend.box.margin=margin(-10, -10, -10, -10),
+          legend.key.size = unit(.1, 'in'))
 }
 graph_parallel_L_by_perpendicular_comparison(compare)
-ggsave(here::here("output", "color_compare", "compare_par_l.png"), 
-       width = 5, height = 5)
+ggsave(here::here("output", "color_compare", "compare_par_l.jpeg"), 
+       width = 2.5, height = 2)
 
 compare <- compare %>%
   group_by(setting) %>%
@@ -891,9 +960,10 @@ ggplot(data = compare,
   coord_equal() +
   scale_fill_identity() +
   theme_void() +
-  facet_grid(~setting)
-ggsave(here::here("output", "color_compare", "compare_samples.png"), 
-       width = 5, height = 2.5)
+  facet_grid(~setting) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "compare_samples.jpeg"), 
+       width = 2.5, height = 1.25)
 
 compare <- compare %>%
   group_by(setting) %>%
@@ -912,9 +982,10 @@ ggplot(data = compare,
   coord_equal() +
   scale_fill_identity() +
   theme_void() +
-  facet_grid(~setting)
-ggsave(here::here("output", "color_compare", "compare_samples2.png"), 
-       width = 5, height = 2.5)
+  facet_grid(~setting) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "compare_samples2.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ## Try lower value of C ----
 C_point <- 16
@@ -937,31 +1008,31 @@ compare <- rbind(xyl[, c('H', 'C', 'L', 'x', 'y',
 
 # C L plane
 graph_C_L_by_H_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_lower_c_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_lower_c_l.jpeg"), 
+       width = 2.5, height = 1.75)
 
 # H L curve
 graph_H_L_by_C_comparison(compare, H_point)
-ggsave(here::here("output", "color_compare", "C_lower_h_l.png"), 
-       width = 5, height = 2.5)
+ggsave(here::here("output", "color_compare", "C_lower_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 # H C plane
 graph_x_y_by_L_comparison(compare, H_point)
-ggsave(here::here("output", "color_compare", "C_lower_h_c.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_lower_h_c.jpeg"), 
+       width = 2.5, height = 2)
 
 # C tangent plane
 graph_parallel_perpendicular_by_L_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_lower_par_per.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_lower_par_per.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_perpendicular_L_by_parallel_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_lower_per_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_lower_per_l.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_parallel_L_by_perpendicular_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_lower_par_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_lower_par_l.jpeg"), 
+       width = 2.5, height = 2)
 
 compare <- compare %>%
   group_by(setting) %>%
@@ -980,9 +1051,10 @@ ggplot(data = compare,
   coord_equal() +
   scale_fill_identity() +
   theme_void() +
-  facet_grid(~setting)
-ggsave(here::here("output", "color_compare", "C_lower_samples.png"), 
-       width = 5, height = 2.5)
+  facet_grid(~setting) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "C_lower_samples.jpeg"), 
+       width = 2.5, height = 1.25)
 
 compare <- compare %>%
   group_by(setting) %>%
@@ -1001,9 +1073,10 @@ ggplot(data = compare,
   coord_equal() +
   scale_fill_identity() +
   theme_void() +
-  facet_grid(~setting)
-ggsave(here::here("output", "color_compare", "C_lower_samples2.png"), 
-       width = 5, height = 2.5)
+  facet_grid(~setting) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "C_lower_samples2.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ## Try higher value of C ----
 C_point <- 75
@@ -1026,31 +1099,31 @@ compare <- rbind(xyl[, c('H', 'C', 'L', 'x', 'y',
 
 # C L plane
 graph_C_L_by_H_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_higher_c_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_higher_c_l.jpeg"), 
+       width = 2.5, height = 1.75)
 
 # H L curve
 graph_H_L_by_C_comparison(compare, H_point)
-ggsave(here::here("output", "color_compare", "C_higher_h_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_higher_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 # H C plane
 graph_x_y_by_L_comparison(compare, H_point)
-ggsave(here::here("output", "color_compare", "C_higher_h_c.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_higher_h_c.jpeg"), 
+       width = 2.5, height = 2)
 
 # C tangent plane
 graph_parallel_perpendicular_by_L_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_higher_par_per.png"), 
-       width = 5, height = 5)
+ggsave(here::here("output", "color_compare", "C_higher_par_per.jpeg"), 
+       width = 2.5, height = 2)
 
 graph_perpendicular_L_by_parallel_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_higher_per_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_higher_per_l.jpeg"), 
+       width = 2.5, height = 1.75)
 
 graph_parallel_L_by_perpendicular_comparison(compare)
-ggsave(here::here("output", "color_compare", "C_higher_par_l.png"), 
-       width = 5, height = 4)
+ggsave(here::here("output", "color_compare", "C_higher_par_l.jpeg"), 
+       width = 2.5, height = 2)
 
 compare <- compare %>%
   group_by(setting) %>%
@@ -1069,9 +1142,10 @@ ggplot(data = compare,
   coord_equal() +
   scale_fill_identity() +
   theme_void() +
-  facet_grid(~setting)
-ggsave(here::here("output", "color_compare", "C_higher_samples.png"), 
-       width = 5, height = 2.5)
+  facet_grid(~setting) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "C_higher_samples.jpeg"), 
+       width = 2.5, height = 1.25)
 
 compare <- compare %>%
   group_by(setting) %>%
@@ -1090,6 +1164,7 @@ ggplot(data = compare,
   coord_equal() +
   scale_fill_identity() +
   theme_void() +
-  facet_grid(~setting)
-ggsave(here::here("output", "color_compare", "C_higher_samples2.png"), 
-       width = 5, height = 2.5)
+  facet_grid(~setting) +
+  theme(text = element_text(size = 5))
+ggsave(here::here("output", "color_compare", "C_higher_samples2.jpeg"), 
+       width = 2.5, height = 1.25)

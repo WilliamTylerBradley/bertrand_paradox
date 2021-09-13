@@ -45,9 +45,11 @@ C_L_plane <- get_C_L_plane(H_point)
 graph_C_L_plane <- function(C_L_plane, color_points, color_hex) {
   ggplot() +
     geom_point(data = C_L_plane,
-               aes(C, L, color = color_value, fill = color_value)) +
+               aes(C, L, color = color_value, fill = color_value),
+               size = .5) +
     geom_point(data = color_points,
-               aes(C, L, color = "white", fill = "white")) +
+               aes(C, L, color = "white", fill = "white"),
+               size = .5) +
     scale_x_continuous(labels = abs) +
     scale_color_identity() +
     scale_fill_identity() +
@@ -56,12 +58,14 @@ graph_C_L_plane <- function(C_L_plane, color_points, color_hex) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
-    coord_equal()
+               size = .5) +
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 graph_C_L_plane(C_L_plane, color_points, color_hex)
-ggsave(here::here("output", "color_investigation", "c_l_plane.png"), 
-       width = 5, height = max(C_L_plane$L) / max(C_L_plane$C) * 5)
+ggsave(here::here("output", "color_investigation", "c_l_plane.jpeg"), 
+       width = 2.5, height = max(C_L_plane$L) / max(C_L_plane$C) * 2.5)
 
 # H-L Curve ----
 get_H_L_curve <- function(C_point) {
@@ -81,10 +85,12 @@ graph_H_L_curve <- function(H_L_curve, color_points, color_hex, H_point) {
   ggplot() +
     geom_point(data = H_L_curve,
                aes((H + (180 - H_point)) %% 360, L, 
-                   color = color_value, fill = color_value)) +
+                   color = color_value, fill = color_value),
+               size = .5) +
     geom_point(data = color_points,
                aes((H + (180 - H_point)) %% 360, L, 
-                   color = "white", fill = "white")) +
+                   color = "white", fill = "white"),
+               size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     geom_point(aes(x = 180, # Because we rotated points to not drop over edge
@@ -92,15 +98,17 @@ graph_H_L_curve <- function(H_L_curve, color_points, color_hex, H_point) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
+               size = .5) +
     scale_x_reverse('H', # Like you're standing on the inside
                     labels = label_H_center(H_point = H_point),
                     limits = c(360, 0)) +
-    coord_equal()
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
-ggsave(here::here("output", "color_investigation", "h_l_curve.png"), 
-       width = 5, height = max(H_L_curve$L) / max(H_L_curve$H) * 5)
+ggsave(here::here("output", "color_investigation", "h_l_curve.jpeg"), 
+       width = 2.5, height = max(H_L_curve$L) / max(H_L_curve$H) * 2.5)
 
 # H-C plane ----
 get_H_C_plane <- function(L_point){
@@ -115,9 +123,11 @@ H_C_plane <- get_H_C_plane(L_point)
 graph_H_C_plane <- function(H_C_plane, color_points, color_hex) {
   ggplot() +
     geom_point(data = H_C_plane,
-               aes(H, C, color = color_value, fill = color_value)) +
+               aes(H, C, color = color_value, fill = color_value),
+               size = .5) +
     geom_point(data = color_points,
-               aes(H, C, color = "white", fill = "white")) +
+               aes(H, C, color = "white", fill = "white"),
+               size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_continuous(breaks = seq(45, 360, 45),
@@ -130,13 +140,15 @@ graph_H_C_plane <- function(H_C_plane, color_points, color_hex) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
+               size = .5) +
     coord_polar(start = 270 * pi / 180,
-                direction = -1)
+                direction = -1) +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 graph_H_C_plane(H_C_plane, color_points, color_hex)
-ggsave(here::here("output", "color_investigation", "h_c_plane.png"), 
-       width = 5, height = 5)
+ggsave(here::here("output", "color_investigation", "h_c_plane.jpeg"), 
+       width = 2.5, height = 2.5)
 
 # C tangent plane ----
 C_circle <- data.frame(H = seq(1, 360),
@@ -158,7 +170,7 @@ C_tangent_plane <- expand_grid(x = C_point, # Plane perpendicular to H at C
   mutate(color_value = "white")
 ggplot(data = H_C_plane,
        aes(H, C, color = color_value, fill = color_value)) +
-  geom_point() +
+  geom_point(size = .5) +
   scale_color_identity() +
   scale_fill_identity() +
   scale_x_continuous(breaks = seq(45, 360, 45),
@@ -172,16 +184,21 @@ ggplot(data = H_C_plane,
                xend = H_point,
                yend = C_point,
                col = "white") +
-  geom_point(data = C_tangent_plane, col = "black") +
+  geom_point(data = C_tangent_plane, col = "black",
+             size = .5) +
   geom_point(x = H_point,
              y = C_point,
              color = 'black',
              fill = color_hex,
-             shape = 21) +
+             shape = 21,
+             size = .5) +
   coord_polar(start = 270 * pi / 180,
-              direction = -1)
-ggsave(here::here("output", "color_investigation", "c_tangent_plane_setup.png"), 
-       width = 5, height = 5)
+              direction = -1) +
+  theme(text = element_text(size = 5),
+        plot.margin = unit(c(0, 0, 0, 0), "null"))
+ggsave(here::here("output", "color_investigation", 
+                  "c_tangent_plane_setup.jpeg"), 
+       width = 2.5, height = 2.5)
 
 get_C_tangent_plane <- function(H_point, C_point) {
   expand_grid(x = C_point, # Plane perpendicular to H at C
@@ -205,10 +222,12 @@ graph_C_tangent_plane <- function(C_tangent_plane, color_points, color_hex) {
   ggplot() +
     geom_point(data = C_tangent_plane,
                aes(perpendicular_from_C_L, L, 
-                   color = color_value, fill = color_value)) +
+                   color = color_value, fill = color_value),
+               size = .5) +
     geom_point(data = color_points,
                aes(perpendicular_from_C_L, L, 
-                   color = "white", fill = "white")) +
+                   color = "white", fill = "white"),
+               size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_reverse("Distance Perpendicular to C-L Plane",
@@ -218,13 +237,15 @@ graph_C_tangent_plane <- function(C_tangent_plane, color_points, color_hex) {
                color = 'black',
                fill = color_hex,
                shape = 21,
-               size = 2) +
-    coord_equal()
+               size = .5) +
+    coord_equal() +
+    theme(text = element_text(size = 5),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
-ggsave(here::here("output", "color_investigation", "c_tangent_plane.png"), 
-       width = 5, height = max(C_tangent_plane$perpendicular_from_C_L) /
-         max(C_tangent_plane$L) * 5)
+ggsave(here::here("output", "color_investigation", "c_tangent_plane.jpeg"), 
+       width = 2.5, height = max(C_tangent_plane$perpendicular_from_C_L) /
+         max(C_tangent_plane$L) * 2.5)
 
 ##------
 # Sphere
@@ -274,7 +295,7 @@ graph_info <- function(H_point, C_point, L_point) {
                                           paste("H Value:", H_point),
                                           paste("C Value:", C_point),
                                           paste("L Value:", L_point))),
-              aes(x, y, label = label), hjust = 0, size = 4) +
+              aes(x, y, label = label), hjust = 0, size = 2) +
     coord_equal() +
     theme_void()
 }
@@ -293,65 +314,67 @@ graph_sample <- function(color_points) {
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(color_points)
 p1 + p2
-ggsave(here::here("output", "color_investigation", "sphere_info.png"), 
-       width = 5, height = 3)
-
+ggsave(here::here("output", "color_investigation", "sphere_info.jpeg"), 
+       width = 2.5, height = 1.25)
 
 graph_C_L <- function(color_points) {
   ggplot(data = color_points, aes(C, L, 
                                   col = color_value, fill = color_value)) +
-    geom_point() +
+    geom_point(size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     coord_equal() +
     theme(axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
-          axis.title.x=element_blank(), axis.title.y=element_blank())
+          axis.title.x=element_blank(), axis.title.y=element_blank(),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "sphere_c_l.png"), 
-       width = 5, height = 2.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "sphere_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 graph_H_L <- function(color_points, H_point) {
   ggplot(data = color_points, aes((H + (180 - H_point)) %% 360, L, 
                                   col = color_value, fill = color_value)) +
-    geom_point() +
+    geom_point(size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     scale_x_reverse() +
     coord_equal() +
     theme(axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
-          axis.title.x=element_blank(), axis.title.y=element_blank())
+          axis.title.x=element_blank(), axis.title.y=element_blank(),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "sphere_h_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "sphere_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 graph_perpendicular_from_C_L <- function(color_points) {
   ggplot(data = color_points, aes(perpendicular_from_C_L, L, 
                                   color = color_value, fill = color_value)) +
-    geom_point() +
+    geom_point(size = .5) +
     scale_color_identity() +
     scale_fill_identity()  +
     scale_x_reverse() +
     coord_equal() +
     theme(axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
-          axis.title.x=element_blank(), axis.title.y=element_blank())
+          axis.title.x=element_blank(), axis.title.y=element_blank(),
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "sphere_p_c_l.png"), 
-       width = 5, height = 2)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "sphere_p_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 graph_x_y <- function(color_points, H_point) {
   ggplot(data = color_points, aes(x, y, 
@@ -369,21 +392,21 @@ graph_x_y <- function(color_points, H_point) {
     geom_abline(slope = tan(H_point * pi/180), 
                 intercept = 0,
                 color = "black") +
-    geom_point() +
+    geom_point(size = .5) +
     scale_color_identity() +
     scale_fill_identity() +
     coord_equal() +
     theme(axis.line=element_blank(), axis.text.x=element_blank(),
           axis.text.y=element_blank(), axis.ticks=element_blank(),
           axis.title.x=element_blank(), axis.title.y=element_blank(),
-          panel.grid.major=element_blank(), panel.grid.minor=element_blank())
+          plot.margin = unit(c(0, 0, 0, 0), "null"))
 }
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "sphere_h_c.png"), 
-       width = 5, height = 2.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "sphere_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ##-------
 # Ellipse
@@ -430,32 +453,32 @@ color_points <- data.frame(x = rnorm(n = n_points),
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(color_points)
 p1 + p2
-ggsave(here::here("output", "color_investigation", "ellipse_info.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_investigation", "ellipse_info.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "ellipse_c_l.png"), 
-       width = 5, height = 3)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "ellipse_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "ellipse_h_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "ellipse_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "ellipse_p_c_l.png"), 
-       width = 5, height = 2)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "ellipse_p_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "ellipse_h_c.png"), 
-       width = 5, height = 3)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "ellipse_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ##--------------
 # Tilted Ellipse
@@ -512,32 +535,32 @@ color_points <- data.frame(x = rnorm(n = n_points),
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(color_points)
 p1 + p2
-ggsave(here::here("output", "color_investigation", "tilted_ellipse_info.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_investigation", "tilted_ellipse_info.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "tilted_ellipse_c_l.png"), 
-       width = 5, height = 2)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "tilted_ellipse_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
-p1 + p2 # Not quite an ellipse
-ggsave(here::here("output", "color_investigation", "tilted_ellipse_h_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2  + plot_layout(widths = c(2, 1)) # Not quite an ellipse
+ggsave(here::here("output", "color_investigation", "tilted_ellipse_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "tilted_ellipse_p_c_l.png"), 
-       width = 5, height = 2)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "tilted_ellipse_p_c_l.jpeg"),
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "tilted_ellipse_h_c.png"), 
-       width = 5, height = 3)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "tilted_ellipse_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 
 ##--------
 # Clean up
@@ -631,36 +654,36 @@ p1 <- graph_sample(color_points_sphere)
 p2 <- graph_sample(color_points_ellipse)
 p3 <- graph_sample(color_points_tilted_ellipse)
 p1 + p2 + p3
-ggsave(here::here("output", "color_investigation", "compare_info.png"), 
-       width = 5, height = 1.5)
+ggsave(here::here("output", "color_investigation", "compare_info.jpeg"), 
+       width = 2.5, height = 1)
 
-p1 <- graph_C_L(color_points_sphere)
-p2 <- graph_C_L(color_points_ellipse)
-p3 <- graph_C_L(color_points_tilted_ellipse)
-p1 + p2 + p3
-ggsave(here::here("output", "color_investigation", "compare_c_l.png"), 
-       width = 5, height = 1.5)
-
-p1 <- graph_H_L(color_points_sphere, H_point)
-p2 <- graph_H_L(color_points_ellipse, H_point)
-p3 <- graph_H_L(color_points_tilted_ellipse, H_point)
-p1 + p2 + p3
-ggsave(here::here("output", "color_investigation", "compare_h_l.png"), 
-       width = 5, height = 3)
-
-p1 <- graph_perpendicular_from_C_L(color_points_sphere)
-p2 <- graph_perpendicular_from_C_L(color_points_ellipse)
-p3 <- graph_perpendicular_from_C_L(color_points_tilted_ellipse)
-p1 + p2 + p3
-ggsave(here::here("output", "color_investigation", "compare_p_c_l.png"), 
-       width = 5, height = 3)
-
-p1 <- graph_x_y(color_points_sphere, H_point)
-p2 <- graph_x_y(color_points_ellipse, H_point)
-p3 <- graph_x_y(color_points_tilted_ellipse, H_point)
-p1 + p2 + p3
-ggsave(here::here("output", "color_investigation", "compare_h_c.png"), 
-       width = 5, height = 2)
+# p1 <- graph_C_L(color_points_sphere)
+# p2 <- graph_C_L(color_points_ellipse)
+# p3 <- graph_C_L(color_points_tilted_ellipse)
+# p1 + p2 + p3
+# ggsave(here::here("output", "color_investigation", "compare_c_l.jpeg"), 
+#        width = 2.5, height = .75)
+# 
+# p1 <- graph_H_L(color_points_sphere, H_point)
+# p2 <- graph_H_L(color_points_ellipse, H_point)
+# p3 <- graph_H_L(color_points_tilted_ellipse, H_point)
+# p1 + p2 + p3
+# ggsave(here::here("output", "color_investigation", "compare_h_l.jpeg"), 
+#        width = 2.5, height = 1.5)
+# 
+# p1 <- graph_perpendicular_from_C_L(color_points_sphere)
+# p2 <- graph_perpendicular_from_C_L(color_points_ellipse)
+# p3 <- graph_perpendicular_from_C_L(color_points_tilted_ellipse)
+# p1 + p2 + p3
+# ggsave(here::here("output", "color_investigation", "compare_p_c_l.jpeg"), 
+#        width = 2.5, height = 1.5)
+# 
+# p1 <- graph_x_y(color_points_sphere, H_point)
+# p2 <- graph_x_y(color_points_ellipse, H_point)
+# p3 <- graph_x_y(color_points_tilted_ellipse, H_point)
+# p1 + p2 + p3
+# ggsave(here::here("output", "color_investigation", "compare_h_c.jpeg"), 
+#        width = 2.5, height = 1)
 
 #--------------------
 # Try some other ones
@@ -697,32 +720,32 @@ color_points <- get_color_points(250^2, 10,
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(color_points)
 p1 + p2
-ggsave(here::here("output", "color_investigation", "outside_edge_info.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_investigation", "outside_edge_info.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "outside_edge_c_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "outside_edge_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "outside_edge_h_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "outside_edge_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "outside_edge_p_c_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "outside_edge_p_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "outside_edge_h_c.png"), 
-       width = 5, height = 3)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "outside_edge_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
 
 # Inside Edge ----
 H_point <- 319
@@ -755,29 +778,29 @@ color_points <- get_color_points(250^2, 10,
 p1 <- graph_info(H_point, C_point, L_point)
 p2 <- graph_sample(color_points)
 p1 + p2
-ggsave(here::here("output", "color_investigation", "inside_edge_info.png"), 
-       width = 5, height = 3)
+ggsave(here::here("output", "color_investigation", "inside_edge_info.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_L_plane(C_L_plane, color_points, color_hex)
 p2 <- graph_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "inside_edge_c_l.png"), 
-       width = 5, height = 3)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "inside_edge_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_L_curve(H_L_curve, color_points, color_hex, H_point)
 p2 <- graph_H_L(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "inside_edge_h_l.png"), 
-       width = 5, height = 1.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "inside_edge_h_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_C_tangent_plane(C_tangent_plane, color_points, color_hex)
 p2 <- graph_perpendicular_from_C_L(color_points)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "inside_edge_p_c_l.png"), 
-       width = 5, height = 2.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "inside_edge_p_c_l.jpeg"), 
+       width = 2.5, height = 1.25)
 
 p1 <- graph_H_C_plane(H_C_plane, color_points, color_hex)
 p2 <- graph_x_y(color_points, H_point)
-p1 + p2
-ggsave(here::here("output", "color_investigation", "inside_edge_h_c.png"), 
-       width = 5, height = 2.5)
+p1 + p2 + plot_layout(widths = c(2, 1))
+ggsave(here::here("output", "color_investigation", "inside_edge_h_c.jpeg"), 
+       width = 2.5, height = 1.25)
